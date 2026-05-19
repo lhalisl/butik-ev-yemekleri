@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { LayoutDashboard, ShoppingBag, Package, LogOut, Menu, X } from 'lucide-react';
@@ -11,6 +12,12 @@ const NAV_ITEMS = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  // Login page renders without sidebar
+  if (pathname === '/admin/giris') {
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -36,7 +43,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Image src="/hazal_chef_logo.png" alt="Hazal Chef" width={40} height={40} className="rounded-full" />
               <div>
                 <p className="text-white text-sm font-semibold leading-tight">Hazal Chef</p>
-                <p className="text-white/60 text-xs">Yönetim Paneli</p>
+                <p className="text-white/70 text-xs">Yönetim Paneli</p>
               </div>
             </div>
             <button
@@ -56,7 +63,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white/85 hover:text-white hover:bg-white/10 transition-all text-sm font-medium"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white hover:bg-white/10 transition-all text-sm font-medium"
             >
               {item.icon}
               {item.label}
@@ -68,14 +75,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="p-3 border-t border-white/10">
           <Link
             href="/"
-            className="flex items-center gap-2 px-3 py-2 text-white/65 hover:text-white text-xs transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-white/70 hover:text-white text-xs transition-colors"
           >
             <LayoutDashboard size={14} />
             Siteye Git
           </Link>
           <Link
             href="/api/admin/logout"
-            className="flex items-center gap-2 px-3 py-2 text-white/65 hover:text-red-400 text-xs transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-white/70 hover:text-red-400 text-xs transition-colors"
           >
             <LogOut size={14} />
             Çıkış Yap
