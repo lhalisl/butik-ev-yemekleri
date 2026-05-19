@@ -70,12 +70,12 @@ export default function AdminSiparislerPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Siparişler</h1>
-          <p className="text-gray-500 text-sm">{orders.length} toplam sipariş</p>
+          <p className="text-gray-600 text-sm">{orders.length} toplam sipariş</p>
         </div>
         <button
           onClick={load}
           disabled={loading}
-          className="flex items-center gap-2 bg-white border border-gray-200 hover:border-green px-4 py-2 rounded-xl text-sm font-medium transition-all"
+          className="flex items-center gap-2 bg-white border border-gray-200 hover:border-green px-4 py-2 rounded-xl text-sm font-medium text-gray-700 transition-all"
         >
           <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
           Yenile
@@ -116,7 +116,7 @@ export default function AdminSiparislerPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-gray-800 text-sm">{order.customer_name}</p>
-                    <p className="text-gray-400 text-xs flex items-center gap-1">
+                    <p className="text-gray-500 text-xs flex items-center gap-1">
                       <Clock size={11} />
                       {formatDate(order.created_at)}
                     </p>
@@ -136,30 +136,30 @@ export default function AdminSiparislerPage() {
                     {/* Customer info */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                       <div className="flex items-start gap-2">
-                        <Phone size={14} className="text-gray-400 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-600">{order.customer_phone}</span>
+                        <Phone size={14} className="text-gray-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-gray-700">{order.customer_phone}</span>
                       </div>
                       {order.customer_address && (
                         <div className="flex items-start gap-2">
-                          <MapPin size={14} className="text-gray-400 flex-shrink-0 mt-0.5" />
-                          <span className="text-gray-600">{order.customer_address}</span>
+                          <MapPin size={14} className="text-gray-500 flex-shrink-0 mt-0.5" />
+                          <span className="text-gray-700">{order.customer_address}</span>
                         </div>
                       )}
                       {order.notes && (
                         <div className="flex items-start gap-2 sm:col-span-2">
-                          <FileText size={14} className="text-gray-400 flex-shrink-0 mt-0.5" />
-                          <span className="text-gray-600 italic">{order.notes}</span>
+                          <FileText size={14} className="text-gray-500 flex-shrink-0 mt-0.5" />
+                          <span className="text-gray-700 italic">{order.notes}</span>
                         </div>
                       )}
                     </div>
 
                     {/* Items */}
                     <div>
-                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Ürünler</p>
+                      <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Ürünler</p>
                       <ul className="space-y-1">
                         {order.order_items?.map(item => (
-                          <li key={item.id} className="flex justify-between text-sm text-gray-700">
-                            <span>{item.product_name} <span className="text-gray-400">x{item.quantity}</span></span>
+                          <li key={item.id} className="flex justify-between text-sm text-gray-800">
+                            <span>{item.product_name} <span className="text-gray-500">x{item.quantity}</span></span>
                             <span className="font-medium">{(item.unit_price * item.quantity).toLocaleString('tr-TR')} ₺</span>
                           </li>
                         ))}
@@ -168,7 +168,7 @@ export default function AdminSiparislerPage() {
 
                     {/* Status update */}
                     <div>
-                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Durum Güncelle</p>
+                      <p className="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">Durum Güncelle</p>
                       <div className="flex flex-wrap gap-2">
                         {STATUS_OPTIONS.map(s => (
                           <button

@@ -84,9 +84,9 @@ export default function AdminUrunlerPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Ürünler & Stok</h1>
-          <p className="text-gray-500 text-sm">{products.length} ürün</p>
+          <p className="text-gray-600 text-sm">{products.length} ürün</p>
         </div>
-        <button onClick={load} disabled={loading} className="flex items-center gap-2 bg-white border border-gray-200 hover:border-green px-4 py-2 rounded-xl text-sm font-medium transition-all">
+        <button onClick={load} disabled={loading} className="flex items-center gap-2 bg-white border border-gray-200 hover:border-green px-4 py-2 rounded-xl text-sm font-medium text-gray-700 transition-all">
           <RefreshCw size={15} className={loading ? 'animate-spin' : ''} />
           Yenile
         </button>
@@ -120,12 +120,12 @@ export default function AdminUrunlerPage() {
         <div className="space-y-6">
           {Object.entries(grouped).map(([cat, items]) => (
             <div key={cat}>
-              <h2 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">
+              <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider mb-3 px-1">
                 {CATEGORY_LABELS[cat] ?? cat}
               </h2>
               <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                 <table className="w-full">
-                  <thead className="bg-gray-50 text-xs text-gray-400 uppercase tracking-wider">
+                  <thead className="bg-gray-100 text-xs text-gray-600 uppercase tracking-wider">
                     <tr>
                       <th className="text-left px-4 py-3">Ürün</th>
                       <th className="text-right px-4 py-3 hidden sm:table-cell">Fiyat</th>
@@ -146,7 +146,7 @@ export default function AdminUrunlerPage() {
                             </div>
                             <div>
                               <p className="text-sm font-medium text-gray-800 leading-tight">{product.name}</p>
-                              {product.includes && <p className="text-xs text-gray-400 leading-tight">{product.includes}</p>}
+                              {product.includes && <p className="text-xs text-gray-500 leading-tight">{product.includes}</p>}
                             </div>
                           </div>
                         </td>
@@ -168,7 +168,7 @@ export default function AdminUrunlerPage() {
                             </button>
                             <span className={`w-10 text-center text-sm font-bold ${
                               product.stock === 0 ? 'text-red-600' :
-                              product.stock <= product.min_stock ? 'text-yellow-600' :
+                              product.stock <= product.min_stock ? 'text-yellow-700' :
                               'text-gray-800'
                             }`}>
                               {product.stock}

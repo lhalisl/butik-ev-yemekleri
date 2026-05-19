@@ -19,9 +19,3 @@ export async function POST(req: NextRequest) {
   return res;
 }
 
-// GET /api/admin/logout
-export async function GET() {
-  const res = NextResponse.redirect(new URL('/admin/giris', process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'));
-  res.cookies.delete('admin_token');
-  return res;
-}
