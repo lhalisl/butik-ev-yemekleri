@@ -54,8 +54,8 @@ export default function Navbar() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-white text-sm font-semibold tracking-wide transition-colors relative group cursor-pointer"
-              style={{ textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}
+              className="text-sm font-semibold tracking-wide transition-colors relative group cursor-pointer"
+              style={{ color: '#ffffff', textShadow: '0 1px 8px rgba(0,0,0,0.7)' }}
             >
               {l.label}
               <span className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
@@ -107,7 +107,8 @@ export default function Navbar() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-white hover:text-gold text-base font-semibold py-1 border-b border-white/10 transition-colors cursor-pointer"
+              className="text-base font-semibold py-1 border-b border-white/10 transition-colors cursor-pointer hover:text-gold"
+              style={{ color: '#ffffff' }}
               onClick={() => setMenuOpen(false)}
             >
               {l.label}
