@@ -18,7 +18,7 @@ export default function MenuCard({ product }: { product: Product }) {
   };
 
   return (
-    <article className="flex flex-col rounded-2xl overflow-hidden bg-dark-card shadow-lg border border-white/5 group transition-transform duration-300 hover:-translate-y-1">
+    <article className="menu-card flex flex-col rounded-2xl overflow-hidden bg-dark-card shadow-lg border border-white/5 group">
       {/* Image */}
       <div className="relative h-48 overflow-hidden">
         {product.image_url ? (
@@ -26,7 +26,7 @@ export default function MenuCard({ product }: { product: Product }) {
             src={product.image_url}
             alt={product.name}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-110"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         ) : (
@@ -54,6 +54,9 @@ export default function MenuCard({ product }: { product: Product }) {
             <span className="text-white font-bold text-sm bg-red-600 px-3 py-1 rounded-full">Tükendi</span>
           </div>
         )}
+
+        {/* Hover gold shimmer overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10" />
       </div>
 
       {/* Body */}
@@ -62,7 +65,7 @@ export default function MenuCard({ product }: { product: Product }) {
           {product.name}
         </h3>
         {product.includes && (
-          <p className="text-white/40 text-xs mb-3 leading-relaxed">{product.includes}</p>
+          <p className="text-white/50 text-xs mb-3 leading-relaxed">{product.includes}</p>
         )}
 
         <div className="mt-auto pt-3 border-t border-white/8 space-y-2">
@@ -72,7 +75,7 @@ export default function MenuCard({ product }: { product: Product }) {
           <button
             onClick={handleAdd}
             disabled={product.stock <= 0}
-            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-burgundy hover:bg-burgundy-dark disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-bold transition-all"
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-burgundy hover:bg-burgundy-dark disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-bold transition-all duration-150 active:scale-[0.97] hover:shadow-[0_4px_16px_rgba(139,37,0,0.4)]"
           >
             <ShoppingCart size={15} />
             Sepete Ekle
