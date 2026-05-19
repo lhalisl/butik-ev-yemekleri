@@ -19,20 +19,25 @@ export default function Navbar() {
 
   const links = [
     { href: '/#hakkimizda', label: 'Hakkımızda' },
-    { href: '/menu', label: 'Menü' },
-    { href: '/#yorumlar', label: 'Yorumlar' },
-    { href: '/#iletisim', label: 'İletişim' },
+    { href: '/menu',        label: 'Menü' },
+    { href: '/#yorumlar',   label: 'Yorumlar' },
+    { href: '/#iletisim',   label: 'İletişim' },
   ];
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-green shadow-lg h-14' : 'bg-transparent h-18'
+        scrolled
+          ? 'bg-green shadow-lg h-14'
+          : 'h-18'
       }`}
+      style={!scrolled ? {
+        background: 'linear-gradient(to bottom, rgba(17,38,24,0.75) 0%, rgba(17,38,24,0) 100%)',
+      } : undefined}
     >
       <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between gap-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center flex-shrink-0">
+        <Link href="/" className="flex items-center flex-shrink-0 cursor-pointer">
           <Image
             src="/hazal_chef_logo.png"
             alt="Hazal Chef"
@@ -49,20 +54,22 @@ export default function Navbar() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-white/85 hover:text-white text-sm font-medium transition-colors relative group"
+              className="text-white text-sm font-semibold tracking-wide transition-colors relative group cursor-pointer"
+              style={{ textShadow: '0 1px 6px rgba(0,0,0,0.5)' }}
             >
               {l.label}
-              <span className="absolute -bottom-1 left-0 right-0 h-px bg-gold scale-x-0 group-hover:scale-x-100 transition-transform" />
+              <span className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
             </Link>
           ))}
         </nav>
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          {/* Cart button */}
+          {/* Cart */}
           <button
             onClick={() => setIsOpen(true)}
-            className="relative flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-full text-sm font-semibold transition-all"
+            className="relative flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white px-3 py-2 rounded-full text-sm font-semibold transition-all cursor-pointer"
+            style={{ textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}
             aria-label="Sepeti aç"
           >
             <ShoppingCart size={18} />
@@ -77,14 +84,14 @@ export default function Navbar() {
           {/* Order CTA */}
           <Link
             href="/menu"
-            className="hidden sm:flex items-center bg-gold hover:bg-gold-light text-green-dark px-4 py-2 rounded-full text-sm font-bold transition-all"
+            className="hidden sm:flex items-center bg-gold hover:bg-gold-light text-green-dark px-4 py-2 rounded-full text-sm font-bold transition-all btn-gold cursor-pointer"
           >
             Sipariş Ver
           </Link>
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden text-white p-1"
+            className="md:hidden text-white p-1 cursor-pointer"
             onClick={() => setMenuOpen(v => !v)}
             aria-label="Menüyü aç"
           >
@@ -100,7 +107,7 @@ export default function Navbar() {
             <Link
               key={l.href}
               href={l.href}
-              className="text-white/80 hover:text-gold text-base font-medium py-1 border-b border-white/10"
+              className="text-white hover:text-gold text-base font-semibold py-1 border-b border-white/10 transition-colors cursor-pointer"
               onClick={() => setMenuOpen(false)}
             >
               {l.label}
@@ -108,7 +115,7 @@ export default function Navbar() {
           ))}
           <Link
             href="/menu"
-            className="bg-gold text-green-dark text-center py-2 rounded-full font-bold"
+            className="bg-gold text-green-dark text-center py-2 rounded-full font-bold cursor-pointer"
             onClick={() => setMenuOpen(false)}
           >
             Sipariş Ver

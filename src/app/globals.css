@@ -67,6 +67,48 @@ a {
 }
 
 /* ════════════════════════════════════════
+   GRAIN TEXTURE  (Nature Distilled style)
+   Adds artisan paper warmth to cream sections
+   ════════════════════════════════════════ */
+
+.grain-section {
+  position: relative;
+  isolation: isolate;
+}
+
+.grain-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.45;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)' opacity='0.06'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 240px 240px;
+  mix-blend-mode: multiply;
+}
+
+.grain-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hero cinematic grain overlay */
+.hero-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)' opacity='0.12'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+}
+
+/* ════════════════════════════════════════
    KEYFRAMES
    ════════════════════════════════════════ */
 
@@ -268,6 +310,56 @@ a {
 .is-visible .gold-line,
 .gold-line.is-visible {
   transform: scaleX(1);
+}
+
+/* ════════════════════════════════════════
+   INTERACTIVE STATES
+   ════════════════════════════════════════ */
+
+/* Ensure pointer cursor on all interactive elements */
+a, button, [role="button"], label[for], select {
+  cursor: pointer;
+}
+
+/* Trust badge icon hover ring */
+.badge-icon {
+  transition:
+    background-color 0.25s var(--ease-out-quart),
+    border-color 0.25s var(--ease-out-quart),
+    transform 0.3s var(--ease-out-expo),
+    box-shadow 0.3s var(--ease-out-quart);
+}
+.badge-icon:hover {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 6px rgba(201, 168, 76, 0.12);
+}
+
+/* Review card */
+.review-card {
+  transition:
+    transform 0.3s var(--ease-out-quart),
+    box-shadow 0.3s var(--ease-out-quart);
+}
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(44, 24, 16, 0.10);
+}
+
+/* ════════════════════════════════════════
+   SECTION GOLD DIVIDER
+   ════════════════════════════════════════ */
+
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(201, 168, 76, 0.35) 30%,
+    rgba(201, 168, 76, 0.6) 50%,
+    rgba(201, 168, 76, 0.35) 70%,
+    transparent 100%
+  );
 }
 
 /* ════════════════════════════════════════

@@ -17,7 +17,7 @@ export default function HomePage() {
         {/* ── HERO ── */}
         <section
           id="hero"
-          className="relative min-h-screen flex items-center justify-center text-center text-white"
+          className="hero-grain relative min-h-screen flex items-center justify-center text-center text-white"
           style={{
             backgroundImage: "url('/brand_assets/restaurant_interior_hazal_1779105131583.png')",
             backgroundSize: 'cover',
@@ -58,8 +58,10 @@ export default function HomePage() {
           </div>
         </section>
 
+        <div className="section-divider" />
+
         {/* ── ABOUT ── */}
-        <section id="hakkimizda" className="py-24 bg-cream overflow-hidden">
+        <section id="hakkimizda" className="grain-section py-24 bg-cream overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="reveal">
               <span className="text-xs font-semibold tracking-[0.18em] uppercase text-burgundy mb-3 block">Hakkımızda</span>
@@ -149,6 +151,8 @@ export default function HomePage() {
           </div>
         </section>
 
+        <div className="section-divider" />
+
         {/* ── TRUST BADGES ── */}
         <section id="neden-biz" className="py-20 bg-green text-white">
           <div className="max-w-7xl mx-auto px-6">
@@ -164,7 +168,7 @@ export default function HomePage() {
                 { icon: <Heart size={28} />, title: 'Ev Lezzeti', desc: 'Şef Hazal\'ın annesinden öğrendiği tarifler, sevgiyle hazırlanır.' },
               ].map((b, i) => (
                 <div key={b.title} className={`reveal delay-${i + 1} text-center group`}>
-                  <div className="w-16 h-16 rounded-full border border-gold/30 bg-gold/10 flex items-center justify-center text-gold mx-auto mb-4 transition-all duration-300 group-hover:bg-gold/20 group-hover:border-gold/60 group-hover:scale-110">
+                  <div className="badge-icon w-16 h-16 rounded-full border border-gold/30 bg-gold/10 flex items-center justify-center text-gold mx-auto mb-4 cursor-default">
                     {b.icon}
                   </div>
                   <h3 className="font-semibold text-gold-light mb-2" style={{ fontFamily: 'var(--font-heading)' }}>{b.title}</h3>
@@ -175,8 +179,10 @@ export default function HomePage() {
           </div>
         </section>
 
+        <div className="section-divider" />
+
         {/* ── REVIEWS ── */}
-        <section id="yorumlar" className="py-24 bg-cream">
+        <section id="yorumlar" className="grain-section py-24 bg-cream">
           <div className="max-w-7xl mx-auto px-6">
             <div className="reveal text-center mb-12">
               <span className="text-xs font-semibold tracking-[0.18em] uppercase text-burgundy mb-3 block">Yorumlar</span>
@@ -196,7 +202,7 @@ export default function HomePage() {
                 { name: 'Mert O.',  stars: 4, text: '"Gece 11\'de sipariş verdim, 35 dakikada geldi ve hâlâ sıcaktı. Kuzu kaburga tandır çok doldurucu."' },
                 { name: 'Selin A.', stars: 4, text: '"Çiğ köftesi enfes! Sipariş süreci çok kolay, anında onay geliyor. Kesinlikle tavsiye ederim."' },
               ].map((r, i) => (
-                <div key={r.name} className={`reveal delay-${i + 1} bg-card rounded-2xl p-6 shadow-sm border border-text/8 hover:shadow-md hover:-translate-y-1 transition-all duration-300`}>
+                <div key={r.name} className={`review-card reveal delay-${i + 1} bg-card rounded-2xl p-6 shadow-sm border border-text/8`}>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 rounded-full bg-green text-white flex items-center justify-center font-bold text-sm" style={{ fontFamily: 'var(--font-heading)' }}>
                       {r.name[0]}
@@ -212,6 +218,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        <div className="section-divider" />
 
         {/* ── CONTACT ── */}
         <section id="iletisim" className="py-24 bg-green-dark text-white">
