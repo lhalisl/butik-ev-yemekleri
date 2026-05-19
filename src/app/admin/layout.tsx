@@ -14,14 +14,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
-  // Login page renders without sidebar
   if (pathname === '/admin/giris') {
     return <>{children}</>;
   }
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      {/* Mobile backdrop */}
       {open && (
         <div
           className="fixed inset-0 bg-black/50 z-40 md:hidden"
@@ -30,25 +28,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       )}
 
       {/* Sidebar */}
-      <aside className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-green-dark flex flex-col shadow-xl
-        transition-transform duration-300 ease-in-out
-        md:static md:w-56 md:flex-shrink-0 md:translate-x-0
-        ${open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-      `}>
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 w-64 flex flex-col shadow-xl transition-transform duration-300 ease-in-out md:static md:w-56 md:flex-shrink-0 md:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
+        style={{ backgroundColor: '#112618' }}
+      >
         {/* Logo */}
-        <div className="p-5 border-b border-white/10">
+        <div className="p-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Image src="/hazal_chef_logo.png" alt="Hazal Chef" width={40} height={40} className="rounded-full" />
               <div>
-                <p className="text-white text-sm font-semibold leading-tight">Hazal Chef</p>
-                <p className="text-white/70 text-xs">Yönetim Paneli</p>
+                <p className="text-sm font-semibold leading-tight" style={{ color: '#ffffff' }}>Hazal Chef</p>
+                <p className="text-xs" style={{ color: 'rgba(255,255,255,0.65)' }}>Yönetim Paneli</p>
               </div>
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="md:hidden text-white/70 hover:text-white transition-colors"
+              className="md:hidden transition-colors"
+              style={{ color: 'rgba(255,255,255,0.7)' }}
             >
               <X size={20} />
             </button>
@@ -57,32 +54,41 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Nav */}
         <nav className="flex-1 p-3 space-y-1">
-          <p className="text-white/50 text-[10px] uppercase tracking-widest px-3 py-2">Menü</p>
-          {NAV_ITEMS.map(item => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-white hover:bg-white/10 transition-all text-sm font-medium"
-            >
-              {item.icon}
-              {item.label}
-            </Link>
-          ))}
+          <p className="text-[10px] uppercase tracking-widest px-3 py-2" style={{ color: 'rgba(255,255,255,0.5)' }}>Menü</p>
+          {NAV_ITEMS.map(item => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all text-sm font-semibold"
+                style={{
+                  color: '#ffffff',
+                  backgroundColor: isActive ? 'rgba(255,255,255,0.15)' : 'transparent',
+                }}
+              >
+                {item.icon}
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Bottom */}
-        <div className="p-3 border-t border-white/10">
+        <div className="p-3" style={{ borderTop: '1px solid rgba(255,255,255,0.12)' }}>
           <Link
             href="/"
-            className="flex items-center gap-2 px-3 py-2 text-white/70 hover:text-white text-xs transition-colors"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors"
+            style={{ color: 'rgba(255,255,255,0.7)' }}
           >
             <LayoutDashboard size={14} />
             Siteye Git
           </Link>
           <Link
             href="/api/admin/logout"
-            className="flex items-center gap-2 px-3 py-2 text-white/70 hover:text-red-400 text-xs transition-colors"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors"
+            style={{ color: 'rgba(255,255,255,0.7)' }}
           >
             <LogOut size={14} />
             Çıkış Yap
@@ -93,15 +99,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile top bar */}
-        <div className="md:hidden flex items-center gap-3 px-4 py-3 bg-green-dark sticky top-0 z-30 border-b border-white/10">
-          <button
-            onClick={() => setOpen(true)}
-            className="text-white/80 hover:text-white transition-colors"
-          >
+        <div className="md:hidden flex items-center gap-3 px-4 py-3 sticky top-0 z-30" style={{ backgroundColor: '#112618', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+          <button onClick={() => setOpen(true)} style={{ color: 'rgba(255,255,255,0.85)' }}>
             <Menu size={22} />
           </button>
           <Image src="/hazal_chef_logo.png" alt="Hazal Chef" width={28} height={28} className="rounded-full" />
-          <span className="text-white text-sm font-semibold">Hazal Chef</span>
+          <span className="text-sm font-semibold" style={{ color: '#ffffff' }}>Hazal Chef</span>
         </div>
 
         <main className="flex-1 overflow-auto">
