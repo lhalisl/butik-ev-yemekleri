@@ -24,6 +24,11 @@ export async function POST(req: NextRequest) {
 
   const supabase = createServiceClient();
 
+  // 'nakit' | 'kapida_kart' | 'online'. Online stays 'pending' until iyzico
+  // confirms; cash/door are collected on handoff so also 'pending'.
+  const pm = body.payment_method;
+  const paymentMethod = pm === 'nakit' || pm === 'kapida_kart' || pm === 'online' ? pm : 'nakit';
+
   // Insert order
   const { data: order, error: orderErr } = await supabase
     .from('orders')
@@ -35,6 +40,9 @@ export async function POST(req: NextRequest) {
       delivery_type: body.delivery_type,
       total: body.total,
       status: 'bekliyor',
+      payment_method: paymentMethod,
+      payment_status: 'pending',
+      source: 'web',
     })
     .select()
     .single();

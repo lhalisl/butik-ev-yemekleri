@@ -1,14 +1,16 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowLeft, Loader2, ShoppingBag, MapPin, Phone, User, FileText, Bike, Store, UtensilsCrossed } from 'lucide-react';
+import { ArrowLeft, Loader2, ShoppingBag, MapPin, Phone, User, FileText, Bike, Store, UtensilsCrossed, CreditCard, Banknote, Wallet } from 'lucide-react';
 import { toast } from 'sonner';
 import { useCart } from '@/contexts/CartContext';
 import Navbar from '@/components/Navbar';
 import CartDrawer from '@/components/CartDrawer';
 import type { DeliveryType } from '@/lib/types';
+
+type PaymentMethod = 'online' | 'nakit' | 'kapida_kart';
 
 const DELIVERY_OPTIONS: { value: DeliveryType; label: string; desc: string; icon: React.ReactNode }[] = [
   { value: 'delivery', label: 'Eve Teslimat', desc: 'Kapınıza getiriyoruz', icon: <Bike size={20} /> },
@@ -16,15 +18,33 @@ const DELIVERY_OPTIONS: { value: DeliveryType; label: string; desc: string; icon
   { value: 'dine-in', label: 'Restoranda', desc: 'Masanıza servis', icon: <UtensilsCrossed size={20} /> },
 ];
 
+const PAYMENT_OPTIONS: { value: PaymentMethod; label: string; desc: string; icon: React.ReactNode }[] = [
+  { value: 'online', label: 'Online Kart', desc: 'Şimdi güvenli öde', icon: <CreditCard size={20} /> },
+  { value: 'nakit', label: 'Nakit', desc: 'Teslimatta öde', icon: <Banknote size={20} /> },
+  { value: 'kapida_kart', label: 'Kapıda Kart', desc: 'Teslimatta kartla', icon: <Wallet size={20} /> },
+];
+
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCart();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [deliveryType, setDeliveryType] = useState<DeliveryType>('delivery');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('online');
+  const [payHtml, setPayHtml] = useState<string | null>(null);
   const [form, setForm] = useState({ name: '', phone: '', address: '', notes: '' });
 
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setForm(prev => ({ ...prev, [k]: e.target.value }));
+
+  // Inject iyzico's checkout form (its content includes a <script> that renders
+  // into #iyzipay-checkout-form). createContextualFragment executes the script.
+  useEffect(() => {
+    if (!payHtml) return;
+    const holder = document.getElementById('iyzico-form-holder');
+    if (!holder) return;
+    holder.innerHTML = '';
+    holder.appendChild(document.createRange().createContextualFragment(payHtml));
+  }, [payHtml]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +69,7 @@ export default function CheckoutPage() {
           customer_address: form.address.trim(),
           notes: form.notes.trim(),
           delivery_type: deliveryType,
+          payment_method: paymentMethod,
           total,
           items: items.map(i => ({
             product_id: i.product.id,
@@ -61,6 +82,20 @@ export default function CheckoutPage() {
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Sipariş oluşturulamadı.');
+
+      if (paymentMethod === 'online') {
+        const initRes = await fetch('/api/payment/iyzico/init', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: data.id }),
+        });
+        const initData = await initRes.json();
+        if (!initRes.ok) throw new Error(initData.error || 'Ödeme başlatılamadı.');
+        clearCart();
+        setPayHtml(initData.checkoutFormContent);
+        setLoading(false);
+        return;
+      }
 
       clearCart();
       router.push(`/siparis/${data.id}`);
@@ -185,13 +220,40 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
+              {/* Payment method */}
+              <div className="bg-white rounded-2xl p-5 shadow-sm border border-text/8">
+                <h2 className="text-base font-semibold text-green mb-4">Ödeme Yöntemi</h2>
+                <div className="grid grid-cols-3 gap-3">
+                  {PAYMENT_OPTIONS.map(o => (
+                    <button
+                      key={o.value}
+                      type="button"
+                      onClick={() => setPaymentMethod(o.value)}
+                      className={`flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 transition-all text-center ${
+                        paymentMethod === o.value
+                          ? 'border-green bg-green/5 text-green'
+                          : 'border-gray-200 text-muted hover:border-green/40'
+                      }`}
+                    >
+                      {o.icon}
+                      <span className="text-xs font-semibold">{o.label}</span>
+                      <span className="text-[10px] opacity-60">{o.desc}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full bg-burgundy hover:bg-burgundy-dark disabled:opacity-60 text-white py-4 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all shadow-lg"
               >
                 {loading ? <Loader2 size={20} className="animate-spin" /> : null}
-                {loading ? 'Sipariş oluşturuluyor…' : `Sipariş Ver — ${total.toLocaleString('tr-TR')} ₺`}
+                {loading
+                  ? 'İşleniyor…'
+                  : paymentMethod === 'online'
+                    ? `Kartla Öde — ${total.toLocaleString('tr-TR')} ₺`
+                    : `Sipariş Ver — ${total.toLocaleString('tr-TR')} ₺`}
               </button>
             </form>
 
@@ -233,6 +295,24 @@ export default function CheckoutPage() {
           </div>
         </div>
       </main>
+
+      {payHtml && (
+        <div className="fixed inset-0 z-[100] bg-black/60 flex items-start justify-center overflow-auto p-4">
+          <div className="bg-white rounded-2xl p-5 mt-8 w-full max-w-lg shadow-2xl">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-base font-bold text-green">Güvenli Ödeme</h3>
+              <button
+                onClick={() => { setPayHtml(null); router.push('/menu'); }}
+                className="text-muted hover:text-green text-sm"
+              >
+                Vazgeç
+              </button>
+            </div>
+            <div id="iyzipay-checkout-form" className="responsive" />
+            <div id="iyzico-form-holder" />
+          </div>
+        </div>
+      )}
     </>
   );
 }

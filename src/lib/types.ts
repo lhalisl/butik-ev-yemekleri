@@ -46,12 +46,15 @@ export type OrderItem = {
   product_name: string;
 };
 
+export type PaymentMethod = 'online' | 'nakit' | 'kapida_kart';
+
 export type CreateOrderPayload = {
   customer_name: string;
   customer_phone: string;
   customer_address: string;
   notes: string;
   delivery_type: DeliveryType;
+  payment_method?: PaymentMethod;
   items: { product_id: string; quantity: number; unit_price: number; product_name: string }[];
   total: number;
 };
