@@ -1,29 +1,44 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import CartDrawer from '@/components/CartDrawer';
 import Footer from '@/components/Footer';
 import MenuCard from '@/components/MenuCard';
-import { MENU_ITEMS, CATEGORIES } from '@/lib/menuData';
+import { CATEGORIES } from '@/lib/menuData';
+import { supabase } from '@/lib/supabase';
 import type { Product } from '@/lib/types';
 
-// Build fake Product objects from static data (stock = 99 until Supabase is seeded)
-const PRODUCTS: Product[] = MENU_ITEMS.map((item, idx) => ({
-  ...item,
-  id: `static-${idx}`,
-  stock: 99,
-  min_stock: 5,
-  created_at: new Date().toISOString(),
-}));
+// Soup first, mains by number, dessert last.
+const sortKey = (mn: string) =>
+  mn === 'soup' ? -1 : mn === 'tatli' ? 9999 : (parseInt(mn, 10) || 5000);
 
 export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load real products (with real DB ids) so orders carry valid product_ids.
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('active', true);
+      if (!alive) return;
+      if (!error && data) {
+        setProducts(
+          [...(data as Product[])].sort((a, b) => sortKey(a.menu_number) - sortKey(b.menu_number)),
+        );
+      }
+      setLoading(false);
+    })();
+    return () => { alive = false; };
+  }, []);
 
   const filtered = useMemo(
-    () => activeCategory === 'all'
-      ? PRODUCTS
-      : PRODUCTS.filter(p => p.category === activeCategory),
-    [activeCategory]
+    () => (activeCategory === 'all' ? products : products.filter((p) => p.category === activeCategory)),
+    [activeCategory, products],
   );
 
   return (
@@ -54,7 +69,7 @@ export default function MenuPage() {
         {/* Filter tabs */}
         <section className="sticky top-14 z-30 bg-dark-bg/95 backdrop-blur-md border-b border-white/8 py-4">
           <div className="max-w-7xl mx-auto px-6 flex items-center gap-2 overflow-x-auto scrollbar-hide">
-            {CATEGORIES.map(cat => (
+            {CATEGORIES.map((cat) => (
               <button
                 key={cat.value}
                 onClick={() => setActiveCategory(cat.value)}
@@ -69,7 +84,7 @@ export default function MenuPage() {
                   <span className={`ml-1.5 text-xs px-1.5 py-0.5 rounded-full ${
                     activeCategory === 'all' ? 'bg-green-dark/20' : 'bg-white/10'
                   }`}>
-                    {PRODUCTS.length}
+                    {products.length}
                   </span>
                 )}
               </button>
@@ -80,11 +95,13 @@ export default function MenuPage() {
         {/* Grid */}
         <section className="bg-dark-bg min-h-screen py-8 pb-24">
           <div className="max-w-7xl mx-auto px-6">
-            {filtered.length === 0 ? (
+            {loading ? (
+              <p className="text-white/40 text-center py-16">Menü yükleniyor…</p>
+            ) : filtered.length === 0 ? (
               <p className="text-white/40 text-center py-16">Bu kategoride yemek bulunamadı.</p>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                {filtered.map(product => (
+                {filtered.map((product) => (
                   <MenuCard key={product.id} product={product} />
                 ))}
               </div>
