@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
-import { getIyzipay, Iyzipay, initCheckoutForm, splitName, toGsm } from '@/lib/iyzico';
+import { IYZ, initCheckoutForm, splitName, toGsm } from '@/lib/iyzico';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,20 +30,20 @@ export async function POST(req: NextRequest) {
     id: String(it.product_id || it.id),
     name: it.product_name,
     category1: 'Yemek',
-    itemType: Iyzipay.BASKET_ITEM_TYPE.PHYSICAL,
+    itemType: IYZ.BASKET_ITEM_PHYSICAL,
     price: (Number(it.unit_price) * it.quantity).toFixed(2),
   }));
   const priceNum = basketItems.reduce((s: number, b: any) => s + Number(b.price), 0);
   const price = priceNum.toFixed(2);
 
   const request = {
-    locale: Iyzipay.LOCALE.TR,
+    locale: IYZ.LOCALE_TR,
     conversationId: String(order.id),
     price,
     paidPrice: price,
-    currency: Iyzipay.CURRENCY.TRY,
+    currency: IYZ.CURRENCY_TRY,
     basketId: `BEY-${order.order_number}`,
-    paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
+    paymentGroup: IYZ.PAYMENT_GROUP_PRODUCT,
     callbackUrl: `${origin}/api/payment/iyzico/callback`,
     enabledInstallments: [1],
     buyer: {
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
 
   let result: any;
   try {
-    result = await initCheckoutForm(getIyzipay(), request);
+    result = await initCheckoutForm(request);
   } catch (e: any) {
     return NextResponse.json({ error: e?.message || 'Ödeme başlatılamadı.' }, { status: 502 });
   }

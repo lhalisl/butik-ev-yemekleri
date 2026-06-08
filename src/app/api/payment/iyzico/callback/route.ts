@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase';
-import { getIyzipay, Iyzipay, retrieveCheckoutForm } from '@/lib/iyzico';
+import { IYZ, retrieveCheckoutForm } from '@/lib/iyzico';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,8 +36,8 @@ export async function POST(req: NextRequest) {
 
   let result: any;
   try {
-    result = await retrieveCheckoutForm(getIyzipay(), {
-      locale: Iyzipay.LOCALE.TR,
+    result = await retrieveCheckoutForm({
+      locale: IYZ.LOCALE_TR,
       conversationId: order?.id || 'callback',
       token,
     });
