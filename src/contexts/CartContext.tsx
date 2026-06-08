@@ -20,11 +20,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Persist to localStorage
+  // Load + sanitize cart from localStorage. Drop legacy items whose product id
+  // isn't a real DB uuid (older builds used placeholder ids like "static-2",
+  // which break order creation).
   useEffect(() => {
+    const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     const saved = localStorage.getItem('hazalchef-cart');
     if (saved) {
-      try { setItems(JSON.parse(saved)); } catch {}
+      try {
+        const parsed = JSON.parse(saved);
+        const clean = Array.isArray(parsed)
+          ? parsed.filter((i: CartItem) => i?.product?.id && UUID.test(i.product.id))
+          : [];
+        setItems(clean);
+      } catch {}
     }
   }, []);
 
